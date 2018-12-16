@@ -5,16 +5,16 @@
 
     <parent>
         <groupId>com.hyt</groupId>
-        <artifactId>ewip</artifactId>
+        <artifactId>app</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>com.hyt</groupId>
-    <artifactId>ewip-eureka</artifactId>
+    <artifactId>app-eureka</artifactId>
     <packaging>jar</packaging>
 
-    <name>ewip-eureka</name>
-    <description>ewip-eureka project for Spring Boot</description>
+    <name>app-eureka</name>
+    <description>app-eureka project for Spring Boot</description>
 
     <dependencies>
         <dependency>
