@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyt.server.mapper.sys.IAreaMapper">
+
+    <resultMap id="BaseResultMap" type="com.hyt.server.entity.sys.Area">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="area_name" jdbcType="VARCHAR" property="areaName"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="p_id" jdbcType="VARCHAR" property="pId"/>
+        <result column="level" jdbcType="SMALLINT" property="level"/>
+        <result column="longitude" jdbcType="DOUBLE" property="longitude"/>
+        <result column="latitude" jdbcType="DOUBLE" property="latitude"/>
+        <result column="altitude" jdbcType="DOUBLE" property="altitude"/>
+        <result column="child" jdbcType="INTEGER" property="child"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="parent_name" jdbcType="VARCHAR" property="parentName"/>
+    </resultMap>
+
+    <!-- 查询地区信息 -->
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+            a.id,
+            a.area_name,
+            a.code,
+            a.p_id,
+            (select b.area_name from area b where b.id = a.p_id) parent_name,
+            (select count(*) from area ar where ar.p_id = a.id) child,
+            a.level,
+            a.longitude,
+            a.latitude,
+            a.altitude,
+            a.create_time
+        FROM area a where 1=1
+        <if test="id != null and id != ''">AND a.id = #{id}</if>
+        <if test="areaName != null and areaName != ''">AND a.area_name LIKE '${areaName}%'</if>
+        <if test="code != null and code != ''">AND a.code = #{code}</if>
+        <if test="pId != null and pId != ''">AND a.p_id = #{pId}</if>
+        <if test="level != null and level != ''">AND a.level = #{level}</if>
+        <choose>
+            <when test="sortName !=null and sortName!='id'">
+                ORDER BY ${sortName} ${sortOrder}
+            </when >
+            <otherwise>
+                ORDER BY a.create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 根据地区id查询地区信息 -->
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+            a.id,
+            a.area_name,
+            a.code,
+            a.p_id,
+            (select b.area_name from area b where b.id = a.p_id) parent_name,
+            a.level,
+            a.longitude,
+            a.latitude,
+            a.altitude,
+            a.create_time
+        FROM area a where 1=1
+        <if test="id != null">AND a.id = #{id, jdbcType=VARCHAR}</if>
+    </select>
+
+
+</mapper>

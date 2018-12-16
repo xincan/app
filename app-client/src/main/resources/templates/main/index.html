@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>一键发布</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+  <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}" />
+  <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all" />
+  <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all" />
+  <link rel="stylesheet" th:href="@{/css/ewip.css}" media="all">
+
+</head>
+<body class="layui-layout-body">
+  
+  <div id="LAY_app">
+    <div class="layui-layout layui-layout-admin">
+      <div class="layui-header">
+        <!-- 头部区域 -->
+        <ul class="layui-nav layui-layout-left" style="z-index: 5;">
+          <li class="layui-nav-item layadmin-flexible" lay-unselect>
+            <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+              <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+            </a>
+          </li>
+          <li class="layui-nav-item" lay-unselect>
+            <a href="javascript:;" layadmin-event="refresh" title="刷新">
+              <i class="layui-icon layui-icon-refresh-3"></i>
+            </a>
+          </li>
+        </ul>
+        <ul class="layui-nav" style="text-align: center;">
+          <li class="layui-nav-item" lay-unselect style="font-size: 26px;"><img style="width: 35px;" th:src="@{/images/login/logo.png}">&nbsp;华池县突发事件预警信息发布平台</li>
+        </ul>
+        <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+          <li class="layui-nav-item" lay-unselect>
+            <a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
+              <i class="layui-icon layui-icon-notice"></i>
+              <!-- 如果有新消息，则显示小圆点 -->
+              <span class="layui-badge-dot"></span>
+            </a>
+          </li>
+          <li class="layui-nav-item layui-hide-xs" lay-unselect>
+            <a href="javascript:;" layadmin-event="fullscreen">
+              <i class="layui-icon layui-icon-screen-full"></i>
+            </a>
+          </li>
+          <li class="layui-nav-item" lay-unselect style="margin-right: 10px;">
+            <a href="javascript:;">
+              <cite class="employeeName"></cite>
+            </a>
+            <dl class="layui-nav-child">
+              <!--<dd><a lay-href="set/user/info.html" >基本资料</a></dd>-->
+              <!--<dd><a lay-href="set/user/password.html" >修改密码</a></dd>-->
+              <!--<hr>-->
+              <dd style="text-align: center;"><a th:href="@{/logout}">退出</a></dd>
+            </dl>
+          </li>
+        </ul>
+      </div>
+
+
+      <div class="layui-side layui-side-menu">
+        <div class="layui-side-scroll">
+          <div class="layui-logo" style="background:#2f9688!important;box-shadow:none;box-sizing: unset;width: 190px;" lay-href="home/console.html"><span></span></div>
+          <ul  class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+            <li th:each="menu, menuStat: ${session.menus}" th:attr="data-name=${menu.code}, class=${menuStat.first} ? 'layui-nav-item layui-nav-itemed' : 'layui-nav-item'">
+              <a href="javascript:;"  th:attr="lay-tips=${menu.name}" lay-direction="2">
+                <i th:attr="class=${menu.icon}"></i><cite th:text="${menu.name}"></cite>
+              </a>
+              <dl th:each="child, childStat: ${menu.child}" class="layui-nav-child">
+                <dd th:attr="data-name=${child.code}, class=${childStat.first} ? 'layui-this' : ''"><a th:attr="lay-href=${child.url}" th:text="${child.name}"></a></dd>
+              </dl>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+      <!-- 侧边菜单
+      <div class="layui-side layui-side-menu">
+        <div class="layui-side-scroll">
+          <div class="layui-logo" style="background:#2f9688!important;box-shadow:none;box-sizing: unset;width: 190px;" lay-href="home/console.html">
+            <span></span>
+          </div>
+          
+          <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+            <li data-name="home" class="layui-nav-item layui-nav-itemed">
+              <a href="javascript:;" lay-tips="导航" lay-direction="2">
+                <i class="layui-icon layui-icon-home"></i>
+                <cite>导航</cite>
+              </a>
+              <dl class="layui-nav-child">
+                <dd data-name="home" class="layui-this"><a lay-href="home">主页</a></dd>
+              </dl>
+            </li>
+            <li data-name="template" class="layui-nav-item">
+              <a href="javascript:;" lay-tips="预警处理" lay-direction="2">
+                <i class="layui-icon layui-icon-template"></i>
+                <cite>预警处理</cite>
+              </a>
+              <dl class="layui-nav-child">
+                <dd data-name="edit"><a lay-href="page/warn/edit">预警编辑</a></dd>
+                <dd data-name="verify"><a lay-href="page/warn/verify">预警审核</a></dd>
+                <dd data-name="issue"><a lay-href="page/warn/issue">预警签发</a></dd>
+                <dd data-name="emergency"><a lay-href="page/warn/emergency">应急办签发</a></dd>
+                <dd data-name="publish"><a lay-href="page/warn/publish">发布中心发布</a></dd>
+              </dl>
+            </li>
+
+            <li data-name="component" class="layui-nav-item" style="display: block">
+              <a href="javascript:;" lay-tips="发布处理" lay-direction="2">
+                <i class="layui-icon layui-icon-component"></i>
+                <cite>发布处理</cite>
+              </a>
+              <dl class="layui-nav-child">
+                <dd data-name="send"><a lay-href="page/message/send" >一键发布</a></dd>
+                <dd data-name="list"><a lay-href="page/message/list" >信息列表</a></dd>
+                <dd data-name="total"><a lay-href="page/message/total" >信息统计</a></dd>
+              </dl>
+            </li>
+
+            <li data-name="component" class="layui-nav-item">
+              <a href="javascript:;" lay-tips="业务管理" lay-direction="2">
+                <i class="layui-icon layui-icon-component"></i>
+                <cite>业务管理</cite>
+              </a>
+              <dl class="layui-nav-child">
+                <dd data-name="area"><a lay-href="page/monitor/area" >地区管理</a></dd>
+                <dd data-name="organization"><a lay-href="page/monitor/organization" >机构管理</a></dd>
+                <dd data-name="channel"><a lay-href="page/monitor/channel" >渠道管理</a></dd>
+                <dd data-name="disaster"><a lay-href="page/monitor/disaster" >灾种管理</a></dd>
+                <dd data-name="group"><a lay-href="page/monitor/group" >群组管理</a></dd>
+                <dd data-name="user"><a lay-href="page/monitor/user" >受众管理</a></dd>
+                <dd data-name="strategy"><a lay-href="page/monitor/strategy" >策略管理</a></dd>
+                <dd data-name="warn"><a lay-href="page/monitor/warn" >预警管理</a></dd>
+              </dl>
+            </li>
+
+            <li data-name="app" class="layui-nav-item">
+              <a href="javascript:;" lay-tips="系统管理" lay-direction="2">
+                <i class="layui-icon layui-icon-app"></i>
+                <cite>系统管理</cite>
+              </a>
+              <dl class="layui-nav-child">
+                <dd data-name="menu"><a lay-href="page/monitor/menu" >菜单管理</a></dd>
+                <dd data-name="employee"><a lay-href="page/monitor/employee" >员工管理</a></dd>
+                <dd data-name="role"><a lay-href="page/monitor/role" >角色管理</a></dd>
+                <dd data-name="permission"><a lay-href="page/monitor/permission" >权限管理</a></dd>
+              </dl>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 页面标签 -->
+      <div class="layadmin-pagetabs" id="LAY_app_tabs" style="display: none;">
+        <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+        <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+        <div class="layui-icon layadmin-tabs-control layui-icon-down">
+          <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+            <li class="layui-nav-item" lay-unselect>
+              <a href="javascript:;"></a>
+              <dl class="layui-nav-child layui-anim-fadein">
+                <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
+                <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
+                <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+              </dl>
+            </li>
+          </ul>
+        </div>
+        <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+          <ul class="layui-tab-title" id="LAY_app_tabsheader">
+            <li lay-id="home/console.html" lay-attr="home/console.html" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+          </ul>
+        </div>
+      </div>
+      
+      
+      <!-- 主体内容 -->
+      <div class="layui-body" id="LAY_app_body">
+        <div class="layadmin-tabsbody-item layui-show">
+          <iframe th:src="@{/home}" frameborder="0" class="layadmin-iframe"></iframe>
+        </div>
+      </div>
+      
+      <!-- 辅助元素，一般用于移动设备下遮罩 -->
+      <div class="layadmin-body-shade" layadmin-event="shade"></div>
+    </div>
+  </div>
+
+  <script th:src="@{/layuiadmin/layui/layui.js}" ></script>
+  <script th:inline="javascript">
+  layui.config({
+    base: [['layuiadmin/']] //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use('index',function () {
+      var $ = layui.$;
+
+      var employee =[[${session.employee}]];
+      layui.sessionData('ewip', {key:'employee',value:employee});
+      $(".employeeName").text(employee.name);
+
+  });
+  </script>
+</body>
+</html>
+
+

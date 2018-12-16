@@ -1,0 +1,84 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+html, body{
+    width: 100%;
+    height: 100%;
+}
+body{
+    overflow: hidden;
+    background: url("../images/login/bg.jpg") no-repeat;
+    background-size: cover;
+}
+
+.layui-form-item{
+    margin-bottom: 0!important;
+}
+.layui-input-block{
+     margin-left: 0px;
+}
+.ewip .ewip-title{
+    width: 100%;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    margin: 0 auto;
+    padding: 10rem 0;
+}
+
+.ewip .ewip-login-title{
+    text-align: center;
+    color: #73dac6;
+    border-bottom: 1px solid #499788;
+    line-height: 40px;
+    font-size: 24px;
+}
+
+.ewip .ewip-from{
+    width: 30%;
+    margin: 0 auto;
+}
+
+.ewip .ewip-login-from{
+    width: 30%;
+    margin: 0 auto;
+    padding: 0px 10px 10px 10px;
+    background: #2835548a;
+}
+
+.ewip .ewip-login-icon{
+    position: relative;
+    top: 32px;
+    left: 5px;
+    color: #499788;
+}
+
+.ewip .ewip-login-icon > i{
+    font-size: 25px;
+}
+
+.ewip .ewip-login-input{
+    padding-left: 32px;
+    background: transparent;
+    border-color: #499788;
+    color: #67c5b3;
+}
+
+.ewip .ewip-link{
+    color: #59b9a7;
+    float: left;
+}
+.ewip .ewip-link:hover{
+    text-decoration: underline;
+}
+.ewip .ewip-float-right{
+    float: right;
+}
+.ewip .ewip-float-left{
+    float: left;
+}
+.ewip .ewip-msg-color-red{
+    color: red;
+}

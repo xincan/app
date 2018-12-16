@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>应急办签发</title>
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/ewip.css}" media="all">
+</head>
+<body>
+
+<!-- 列表：数据行操作 -->
+<script type="text/html" id="btnGroupOption">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="updateOption"><i class="layui-icon layui-icon-edit"></i>应急办签发</a>
+</script>
+
+
+<!-- 修改弹出层 -->
+<script id="updatePop" type="text/html">
+
+    <div class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <label class="layui-form-label">预警标题</label>
+            <div class="layui-input-block">
+                <textarea type="text" autocomplete="off" readonly disabled class="layui-textarea">{{d.title}}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">审核意见</label>
+            <div class="layui-input-block">
+                <textarea type="text" name="advice" placeholder="请输入审核意见" autocomplete="off" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide" >
+            <div class="layui-input-block layui-col-md-offset4">
+                <button class="layui-btn" lay-submit="" lay-filter="submitUpdateBtn" id="submitUpdateBtn">编辑</button>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <form action="javascript:;" class="layui-form layui-card-header layuiadmin-card-header-auto searchParam">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <select id="searchDisasterColor" name="disasterColor" placeholder="请选择预警颜色">
+                        <option value="">请选择预警颜色</option>
+                        <option value="0">红色</option>
+                        <option value="1">橙色</option>
+                        <option value="2">黄色</option>
+                        <option value="3">蓝色</option>
+                    </select>
+                </div>
+
+                <div class="layui-inline">
+                    <select id="searchDisasterLevel" name="disasterLevel" placeholder="请选择预警级别">
+                        <option value="">请选择预警级别</option>
+                        <option value="0">Ⅰ级/特别重大</option>
+                        <option value="1">Ⅱ级/重大</option>
+                        <option value="2">Ⅲ级/较大</option>
+                        <option value="3">Ⅳ级/一般</option>
+                    </select>
+                </div>
+
+                <div class="layui-inline">
+                    <select id="searchWarnType" name="warnType" placeholder="请选择预警信息类型">
+                        <option value="">请选择预警信息类型</option>
+                        <option value="Actual">实际</option>
+                        <option value="Exercise">演练</option>
+                        <option value="Test">测试</option>
+                        <option value="Draft">草稿</option>
+                    </select>
+                </div>
+
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-button-btn" lay-submit="search" lay-filter="search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                    <button class="layui-btn layui-btn-danger" type="reset">
+                        <i class="layui-icon layui-icon-delete layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div class="layui-card-body">
+            <!-- 列表信息 -->
+            <table class="layui-table" lay-filter="table" id="table"></table>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/layuiadmin/layui/layui.js}" ></script>
+<script th:src="@{/ewip/warn/emergency.js}" charset="utf-8"></script>
+</body>
+</html>

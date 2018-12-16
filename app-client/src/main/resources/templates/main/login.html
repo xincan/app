@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8" />
+        <title>登录</title>
+        <meta name="renderer" content="webkit" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all" />
+        <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all" />
+        <link rel="stylesheet" th:href="@{/css/login.css}"  media="all" />
+    </head>
+    <body layadmin-themealias="default" class="ewip">
+
+        <div class="ewip-title">
+            <h2><img style="width: 70px;margin-right: 10px;" th:src="@{/images/login/logo.png}">大庆市突发事件预警信息发布系统</h2>
+        </div>
+
+        <form action="" class="layui-form ewip-login-from" method="post">
+            <div class="layui-form-item ewip-login-title">登&nbsp;录</div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <label class="ewip-login-icon"><i class="layui-icon layui-icon-username"></i></label>
+                    <input type="text" class="layui-input ewip-login-input" id="username" name="username" lay-verify="username" autocomplete="off" placeholder="登录名称" />
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <label class="ewip-login-icon"><i class="layui-icon layui-icon-password"></i></label>
+                    <input type="password" class="layui-input ewip-login-input" id="password" name="password" lay-verify="password" placeholder="登录密码" autocomplete="off" />
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="margin-top: 25px;">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="submit">登&nbsp;&nbsp;录</button>
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="margin-top: 20px;">
+                <span class="ewip-float-left ewip-msg-color-red" th:text="${msg}"></span>
+                <span class=" ewip-float-right" style="display: none;">
+                    <a href="" class="ewip-link" style="float: left">忘记密码?</a>
+                    <span style="float: left;color:#59b9a7;">&nbsp;|&nbsp;</span>
+                    <a href="" class="ewip-link" style="float: left">用户注册</a>
+                </span>
+            </div>
+        </form>
+
+        <script th:src="@{/layuiadmin/layui/layui.js}" charset="utf-8"></script>
+        <script th:src="@{/ewip/login/login.js}" charset="utf-8"></script>
+
+    </body>
+
+
+
+</html>

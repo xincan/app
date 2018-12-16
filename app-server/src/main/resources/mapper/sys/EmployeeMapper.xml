@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyt.server.mapper.sys.IEmployeeMapper">
+
+    <resultMap id="BaseResultMap" type="com.hyt.server.entity.sys.Employee">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="login_name" jdbcType="VARCHAR" property="loginName"/>
+        <result column="login_password" jdbcType="VARCHAR" property="loginPassword"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+        <result column="area_name" jdbcType="VARCHAR" property="areaName"/>
+        <result column="level" jdbcType="SMALLINT" property="level"/>
+        <result column="organization_id" jdbcType="VARCHAR" property="organizationId"/>
+        <result column="organization_name" jdbcType="VARCHAR" property="organizationName"/>
+        <result column="organization_code" jdbcType="VARCHAR" property="organizationCode"/>
+        <result column="organization_type" jdbcType="VARCHAR" property="organizationType"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="sex" jdbcType="SMALLINT" property="sex"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <resultMap id="BaseRoleMap" type="com.hyt.server.entity.sys.Role">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="role" jdbcType="VARCHAR" property="role"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="status" jdbcType="SMALLINT" property="status"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <!-- 查询所有用户信息 -->
+    <select id="findAll"  resultMap="BaseResultMap">
+        select
+            e.id,
+            e.login_name,
+            e.login_password,
+            e.name,
+            e.area_id,
+            a.area_name,
+            a.level,
+            e.organization_id,
+            o.organization_name,
+            o.code organization_code,
+            o.type organization_type,
+            e.phone,
+            e.email,
+            e.sex,
+            e.create_time
+        FROM employee e
+        LEFT JOIN area a on a.id = e.area_id
+        LEFT JOIN organization o on o.id = e.organization_id
+        where 1=1
+        <if test="id != null and id != ''">and e.id = #{id}</if>
+        <if test="loginName != null and loginName != ''">AND e.login_name LIKE '${loginName}%'</if>
+        <if test="name != null and name != ''">AND e.name like '${name}%'</if>
+        <if test="areaId != null and areaId != ''">and e.area_id = #{areaId}</if>
+        <if test="organizationId != null and organizationId != ''">and e.organization_id = #{organizationId}</if>
+        <if test="phone != null and phone != ''">and e.phone like '${phone}%'</if>
+        <if test="sex != null and sex != ''">and e.sex = #{sex}</if>
+        <choose>
+            <when test="sortName !=null and sortName!='id'">
+                ORDER BY ${sortName} ${sortOrder}
+            </when >
+            <otherwise>
+                ORDER BY e.create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 用户登录信息 -->
+    <select id="login" resultMap="BaseResultMap">
+        select
+            e.id,
+            e.login_name,
+            e.login_password,
+            e.name,
+            e.area_id,
+            a.area_name,
+            a.level,
+            e.organization_id,
+            o.organization_name,
+            o.code organization_code,
+            o.type organization_type,
+            e.phone,
+            e.email,
+            e.sex,
+            e.create_time
+        FROM employee e
+        LEFT JOIN area a on a.id = e.area_id
+        LEFT JOIN organization o on o.id = e.organization_id
+        where 1=1
+        <if test="id != null and id != ''">
+            AND e.id = #{id}
+        </if>
+        <if test="loginName != null and loginName != ''">
+            AND e.login_name = #{loginName}
+        </if>
+        <if test="loginPassword != null and loginPassword != ''">
+            AND e.login_password = #{loginPassword}
+        </if>
+    </select>
+
+    <!--用户分配角色-->
+    <insert id="insertEmployeeRole">
+        insert into employee_role (id, employee_id, role_id, create_time )
+        values
+        <foreach collection="roleId.split(',')" item="item"  separator=","  >
+            (REPLACE(UUID(),'-',''), #{employeeId}, '${item}', now())
+        </foreach>
+    </insert>
+
+    <!--根据用户ID查询对应的角色信息-->
+    <select id="selectEmployeeInRole" resultMap="BaseRoleMap">
+        SELECT
+            r.id,
+            r.role,
+            r.description,
+            r.status
+        FROM
+            role r
+        LEFT JOIN employee_role er ON er.role_id = r.id
+        WHERE
+          r.status = 1
+        <if test="employeeId != null and employeeId != ''">
+            AND er.employee_id = #{employeeId}
+        </if>
+    </select>
+
+    <!--根据员工ID删除对应的角色信息-->
+    <delete id="deleteEmployeeInRole">
+        DELETE FROM employee_role WHERE employee_id IN (
+            <foreach collection="employeeId.split(',')" item="item" separator=",">
+                '${item}'
+            </foreach>
+        )
+    </delete>
+
+    <!--根据员工ID删除员工信息-->
+    <delete id="deleteByEmployeeId">
+        DELETE FROM employee WHERE id IN (
+            <foreach collection="employeeId.split(',')" item="item"  separator=","  >
+                '${item}'
+            </foreach>
+        )
+    </delete>
+
+</mapper>

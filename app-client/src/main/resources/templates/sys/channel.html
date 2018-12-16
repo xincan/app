@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>发布手段管理</title>
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/ewip.css}" media="all">
+
+</head>
+<body>
+
+
+    <!-- 列表：数据行操作 -->
+    <script type="text/html" id="btnGroupOption">
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="updateOption"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+        {{# if(d.child != 0) { }}
+        <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="deleteOption"><i class="layui-icon layui-icon-delete"></i>删除</a>
+        {{# }else{ }}
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteOption"><i class="layui-icon layui-icon-delete"></i>删除</a>
+        {{# } }}
+    </script>
+
+    <!-- 添加弹出层 -->
+    <script id="addPop" type="text/html">
+        <div class="layui-form layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    <select name="type" lay-verify="type" placeholder="请选择发布手段类型">
+                        <option value="">请选择发布手段类型</option>
+                        <option value="0">渠道</option>
+                        <option value="1">手段</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属手段</label>
+                <div class="layui-input-block">
+                    <select class="channel" name="pId" lay-verify="pId" placeholder="请选择所属发布手段">
+                        <option value="">请选择所属发布手段</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">手段名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="name" placeholder="请输入发布手段名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">手段编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="code" lay-verify="code" placeholder="请输入发布手段编码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否启用</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="status" value="0" title="禁用">
+                    <input type="radio" name="status" value="1" title="启用" checked>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">上传图标</label>
+                <div class="layui-input-block upload">
+                    <input type="text" readonly name="icon" lay-verify="icon" placeholder="请上传图标（要求图片大小：50px*50px）" autocomplete="off" class="layui-input ewip-upload-input">
+                    <input type="file" hidden  id="addFile" name="addFile">
+                    <button class="ewip-upload-btn" id="addUploadBtn">上传</button>
+                </div>
+            </div>
+            <div class="layui-form-item layui-hide" >
+                <div class="layui-input-block layui-col-md-offset4">
+                    <button class="layui-btn" lay-submit="" lay-filter="submitAddBtn" id="submitAddBtn">添加</button>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- 修改弹出层 -->
+    <script id="updatePop" type="text/html">
+
+        <div class="layui-form layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    <select name="type" lay-verify="type" placeholder="请选择发布手段类型">
+                        <option value="">请选择发布手段类型</option>
+                        <option value="0">发布</option>
+                        <option value="1">手段</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属手段</label>
+                <div class="layui-input-block">
+                    <select class="channel" name="pId" lay-verify="pId" placeholder="请选择所属发布手段">
+                        <option value="">请选择发布手段</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">手段名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" value="{{d.name}}" lay-verify="name" placeholder="请输入发布手段名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">手段编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="code" value="{{d.code}}" lay-verify="code" placeholder="请输入发布手段编码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否启用</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="status" value="0" title="禁用">
+                    <input type="radio" name="status" value="1" title="启用" checked>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">上传图标</label>
+                <div class="layui-input-block upload">
+                    <input type="text" readonly name="icon" value="{{d.icon}}" lay-verify="icon" placeholder="请上传图标（要求图片大小：50px*50px）" autocomplete="off" class="layui-input ewip-upload-input">
+                    <input type="file" hidden  id="updateFile" name="updateFile">
+                    <button class="ewip-upload-btn" id="updateUploadBtn">上传</button>
+                </div>
+            </div>
+            <div class="layui-form-item layui-hide" >
+                <div class="layui-input-block layui-col-md-offset4">
+                    <button class="layui-btn" lay-submit="" lay-filter="submitUpdateBtn" id="submitUpdateBtn">添加</button>
+                </div>
+            </div>
+        </div>
+    </script>
+
+
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <form action="javascript:;" class="layui-form layui-card-header layuiadmin-card-header-auto searchParam">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" placeholder="请输入发布手段名称" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select name="type" placeholder="请选择类型">
+                                <option value="">请选择类型</option>
+                                <option value="0">发布</option>
+                                <option value="1">手段</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn layuiadmin-button-btn" lay-submit="search" lay-filter="search">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                        <button class="layui-btn layui-btn-danger" type="reset">
+                            <i class="layui-icon layui-icon-delete layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="layui-card-body">
+
+                <div class="layui-btn-group tableBar">
+                    <button class="layui-btn" data-type="addBarBtn">添加</button>
+                    <button class="layui-btn" data-type="deleteBarBtn">删除</button>
+                </div>
+
+                <!-- 列表信息 -->
+                <table class="layui-table ewip-table" lay-filter="table" id="table"></table>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/layuiadmin/layui/layui.js}" ></script>
+    <script th:src="@{/ewip/sys/channel.js}" charset="utf-8"></script>
+
+</body>
+</html>

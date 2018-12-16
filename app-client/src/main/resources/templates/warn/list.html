@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8" />
+        <title>预警信息</title>
+        <meta name="renderer" content="webkit" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
+        <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all">
+        <link rel="stylesheet" th:href="@{/css/ewip.css}" media="all">
+
+    </head>
+    <body>
+
+        <div class="layui-fluid">
+            <div class="layui-card">
+                <form action="javascript:;" class="layui-form layui-card-header layuiadmin-card-header-auto searchParam">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input type="text" name="disasterName" placeholder="请输入预警名称" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <select  name="disasterColor" lay-verify="disasterColor" placeholder="请选择灾种颜色">
+                                    <option value="">请选择灾种颜色</option>
+                                    <option value="0">红色</option>
+                                    <option value="1">橙色</option>
+                                    <option value="2">黄色</option>
+                                    <option value="3">蓝色</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <select  name="disasterLevel" lay-verify="disasterLevel" placeholder="请选择灾种级别">
+                                    <option value="">请选择灾种级别</option>
+                                    <option value="0">Ⅰ级/特别重大</option>
+                                    <option value="1">Ⅱ级/重大</option>
+                                    <option value="2">Ⅲ级/较大</option>
+                                    <option value="3">Ⅳ级/一般</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <select  name="warnType" lay-verify="warnType" placeholder="请选择预警类型">
+                                    <option value="">请选择预警类型</option>
+                                    <option value="Actual">实际</option>
+                                    <option value="Exercise">演练</option>
+                                    <option value="Test">测试</option>
+                                    <option value="Draft">草稿</option>
+                                    <option value="Error">错误</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <select  name="msgType" lay-verify="msgType" placeholder="请选择信息类型">
+                                    <option value="">请选择信息类型</option>
+                                    <option value="Alert">首次</option>
+                                    <option value="Update">更新</option>
+                                    <option value="Cancel">解除</option>
+                                    <option value="Ack">确认</option>
+                                    <option value="Error">错误</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <select  name="flow" lay-verify="flow" placeholder="请选择流程状态">
+                                    <option value="">请选择流程状态</option>
+                                    <option value="0">录入</option>
+                                    <option value="1">审核</option>
+                                    <option value="2">签发</option>
+                                    <option value="3">应急办签发</option>
+                                    <option value="4">发布</option>
+                                    <option value="5">保存代发</option>
+                                    <option value="6">驳回</option>
+                                    <option value="7">终止</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <select  name="status" lay-verify="status" placeholder="请选择发布状态">
+                                    <option value="">请选择发布状态</option>
+                                    <option value="0">未发布</option>
+                                    <option value="1">已发布</option>
+                                    <option value="2">解除</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="layui-inline">
+                            <button class="layui-btn layuiadmin-button-btn" lay-submit="search" lay-filter="search">
+                                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                            </button>
+                            <button class="layui-btn layui-btn-danger" type="reset">
+                                <i class="layui-icon layui-icon-delete layuiadmin-button-btn"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="layui-card-body">
+
+                    <!-- 列表：数据行操作 -->
+                    <script type="text/html" id="btnGroupOption" th:inline="javascript" charset="UTF-8">
+
+                        <!--机构判断 机构类型:0:发布中心；1：预案单位；2：应急办 -->
+                        {{# if(d.organizationType == 2){ }}
+                            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="historyOption"><i class="layui-icon layui-icon-form"></i>追溯</a>
+                        {{# }else{ }}
+
+                            <!--预警流程表flow状态判断0：录入；1：审核；2：签发；3：应急办签发；4：发布；5：保存代发；6：驳回; 7：终止-->
+                            {{# if(d.flow == 5 || d.flow == 6){ }}
+                                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="resendOption"><i class="layui-icon layui-icon-form"></i>重发</a>
+                            {{# }else{ }}
+                                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="historyOption"><i class="layui-icon layui-icon-form"></i>追溯</a>
+                            {{# } }}
+
+                        {{# } }}
+
+                    </script>
+
+                    <!-- 列表信息 -->
+                    <table class="layui-table ewip-table" lay-filter="table" id="table"></table>
+                </div>
+            </div>
+        </div>
+
+        <script th:src="@{/layuiadmin/layui/layui.js}" ></script>
+        <script th:src="@{/ewip/warn/list.js}" charset="utf-8"></script>
+
+    </body>
+</html>

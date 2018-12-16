@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>机构管理</title>
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/ewip.css}" media="all">
+
+</head>
+<body>
+
+    <!-- 列表：数据行操作 -->
+    <script type="text/html" id="btnGroupOption">
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="updateOption"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+        {{# if(d.child != 0){ }}
+            <a class="layui-btn layui-btn-disabled layui-btn-xs" ><i class="layui-icon layui-icon-delete"></i>删除</a>
+        {{# }else{ }}
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteOption"><i class="layui-icon layui-icon-delete"></i>删除</a>
+        {{# } }}
+    </script>
+
+    <!-- 添加弹出层 -->
+    <script id="addPop" type="text/html">
+        <div class="layui-form layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属地区</label>
+                <div class="layui-input-block">
+                    <div id="addAreaId" name="areaId" class="select-tree layui-form-select" autocomplete="off" placeholder="请选择所属地区"></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">上级机构</label>
+                <div class="layui-input-block">
+                    <div id="addPId" name="pId" class="select-tree layui-form-select" autocomplete="off" placeholder="请选择上级机构"></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">机构类型</label>
+                <div class="layui-input-block">
+                    <select name="type" lay-verify="type" placeholder="请选择机构类型">
+                        <option value="">请选择机构类型</option>
+                        <option value="0">发布中心</option>
+                        <option value="1">预案单位</option>
+                        <option value="2">应急办</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">机构名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="organizationName" lay-verify="organizationName" placeholder="请输入机构名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">机构编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="code" lay-verify="code" placeholder="请输入地区编码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-hide" >
+                <div class="layui-input-block layui-col-md-offset4">
+                    <button class="layui-btn" lay-submit="" lay-filter="submitAddBtn" id="submitAddBtn">添加</button>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- 修改弹出层 -->
+    <script id="updatePop" type="text/html">
+
+        <div class="layui-form layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属地区</label>
+                <div class="layui-input-block">
+                    <div id="updateAreaId" name="areaId" class="select-tree layui-form-select" autocomplete="off" placeholder="请选择所属地区"></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">上级机构</label>
+                <div class="layui-input-block">
+                    <div id="updatePId" name="pId" class="select-tree layui-form-select" autocomplete="off" placeholder="请选择上级机构"></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">机构类型</label>
+                <div class="layui-input-block">
+                    <select name="type" lay-verify="type" placeholder="请选择机构类型">
+                        <option value="">请选择机构类型</option>
+                        <option value="0">发布中心</option>
+                        <option value="1">预案单位</option>
+                        <option value="2">应急办</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">机构名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="organizationName" value="{{d.organizationName}}" lay-verify="organizationName" placeholder="请输入机构名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">机构编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="code" value="{{d.code}}" lay-verify="code" placeholder="请输入地区编码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-hide" >
+                <div class="layui-input-block layui-col-md-offset4">
+                    <button class="layui-btn" lay-submit="" lay-filter="submitUpdateBtn" id="submitUpdateBtn">添加</button>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <form action="javascript:;" class="layui-form layui-card-header layuiadmin-card-header-auto searchParam">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" name="organizationName" placeholder="请输入机构名称" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <div id="searchAreaId" name="areaId" class="select-tree layui-form-select" autocomplete="off" placeholder="请选择所属地区"></div>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <div id="searchPId" name="pId" class="select-tree layui-form-select" autocomplete="off" placeholder="请选择上级机构"></div>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <button class="layui-btn layuiadmin-button-btn" lay-submit="search" lay-filter="search">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                        <button class="layui-btn layui-btn-danger" type="reset">
+                            <i class="layui-icon layui-icon-delete layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="layui-card-body">
+
+                <div class="layui-btn-group tableBar">
+                    <button class="layui-btn" data-type="addBarBtn">添加</button>
+                    <button class="layui-btn" data-type="deleteBarBtn">删除</button>
+                </div>
+
+                <!-- 列表信息 -->
+                <table class="layui-table" lay-filter="table" id="table"></table>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/layuiadmin/layui/layui.js}" ></script>
+    <script th:src="@{/ewip/sys/organization.js}" charset="utf-8"></script>
+
+</body>
+</html>

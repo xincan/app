@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyt.server.mapper.sys.IOrganizationMapper">
+
+    <resultMap id="BaseResultMap" type="com.hyt.server.entity.sys.Organization">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="organization_name" jdbcType="VARCHAR" property="organizationName"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="p_id" jdbcType="VARCHAR" property="pId"/>
+        <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+        <result column="parent_name" jdbcType="VARCHAR" property="parentName"/>
+        <result column="area_name" jdbcType="VARCHAR" property="areaName"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="child" jdbcType="INTEGER" property="child"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <!-- 查询机构信息 -->
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+          o.id,
+          o.organization_name,
+          o.code,
+          o.p_id,
+          (select b.organization_name from organization b where b.id = o.p_id) parent_name,
+          o.area_id,
+          o.type,
+          (select a.area_name from area a where a.id = o.area_id) area_name,
+          (select count(*) from organization org where org.p_id = o.id) child,
+          o.create_time
+        FROM organization o where 1=1
+        <if test="id != null and id != ''">and id = #{id}</if>
+        <if test="organizationName != null and organizationName != ''">AND o.organization_name LIKE '${organizationName}%'</if>
+        <if test="code != null and code != ''">AND o.code = #{code}</if>
+        <if test="pId != null and pId != ''">AND o.p_id = #{pId}</if>
+        <if test="areaId != null and areaId != ''">AND o.area_id = #{areaId}</if>
+        <choose>
+            <when test="sortName !=null and sortName!='id'">
+                ORDER BY ${sortName} ${sortOrder}
+            </when >
+            <otherwise>
+                ORDER BY o.create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 根据地区id查询地区信息 -->
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        o.id,
+        o.organization_name,
+        o.code,
+        o.p_id,
+        (select b.organization_name from organization b where b.id = o.p_id) parent_name,
+        o.area_id,
+        o.type,
+        (select a.area_name from area a where a.id = o.area_id) area_name,
+        o.create_time
+        FROM organization o where 1=1
+        <if test="id != null and id != ''">and o.id = #{id, jdbcType=VARCHAR}</if>
+    </select>
+
+    <!-- 根据机构ID，机构类型查询同级的其他机构信息 -->
+    <select id="selectSameGradeByParam"  resultMap="BaseResultMap">
+        SELECT
+          id,
+          organization_name
+        from organization
+        where area_id = (
+          SELECT area_id from organization where id = #{organizationId}
+        )
+        AND type = #{type}
+    </select>
+</mapper>

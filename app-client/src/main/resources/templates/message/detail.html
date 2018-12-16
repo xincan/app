@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>发布信息详情</title>
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/ewip.css}" media="all">
+</head>
+<body>
+
+    <!--消息id-->
+    <input id="messageId" th:value="${id}" hidden />
+
+    <div class="layui-fluid one">
+        <div class="layui-form layui-form-pane">
+            <div class="layui-row layui-col-space5 basis">
+
+                <!-- 基础信息 -->
+                <div class="layui-col-xs12 layui-col-md12 layui-col-lg12">
+                    <div class="layui-card">
+                        <div class="layui-card-header"> <span>&nbsp;&nbsp;<i class="layui-icon warn-card-hader-icon">&#xe675;</i>基础信息</span></div>
+                        <div class="layui-card-body  layui-col-space5" style="min-height: 100px">
+
+                                <div class="layui-col-md6 layui-col-sm6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">标题</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="title" lay-verify="title" placeholder="请输入标题" autocomplete="off" class="layui-input" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">业务类型</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="type" lay-verify="type" placeholder="请选择业务类型" autocomplete="off" class="layui-input" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md6 layui-col-sm6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">发布时间</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" id="sendTime" name="sendTime" lay-verify="sendTime" placeholder="请选择发布时间" autocomplete="off" class="layui-input" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">发布单位</label>
+                                        <div class="layui-input-block">
+                                            <!-- 机构编码 -->
+                                            <input type="hidden" name="organizationCode"/>
+                                            <input type="text" name="organizationName" disabled lay-verify="required" placeholder="请输入发布单位" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 发布渠道 -->
+                <div class="layui-col-xs12 layui-col-md12 layui-col-lg12">
+                    <div class="layui-card">
+                        <div class="layui-card-header"><span>&nbsp;&nbsp;<i class="layui-icon layui-icon-release warn-card-hader-icon"></i>发布渠道</span></div>
+                        <div class="layui-card-body">
+                            <div class="channel-list">
+                                <!--<div class="imgbox-back" data-id="1" data-title="短信" data-channel="01-短信" data-code="SMS">-->
+                                <!--<img th:src="@{/channel/07-微博.png}" alt="短信">-->
+                                <!--<span>短信</span>-->
+                                <!--</div>-->
+                                <!--<div class="imgbox-back" data-id="2" data-title="APP" data-channel="02-APP" data-code="SMS">-->
+                                <!--<img th:src="@{/channel/07-微博.png}" alt="APP">-->
+                                <!--<span>APP</span>-->
+                                <!--</div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 影响地区 -->
+                <div th:class="${session.employee.level eq '3' ? 'layui-col-xs3 layui-col-md3 layui-col-lg3 layui-hide' : 'layui-col-xs3 layui-col-md3 layui-col-lg3'}">
+                    <div class="layui-card">
+                        <div class="layui-card-header"><span>&nbsp;&nbsp;<i class="layui-icon layui-icon-tree warn-card-hader-icon"></i>影响地区</span></div>
+                        <div  class="layui-card-body warn-card-body-height">
+                            <div id="areaTree" class="ztree"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 预警内容 -->
+                <div th:class="${session.employee.level eq '3' ? 'layui-col-xs8 layui-col-md8 layui-col-lg8' : 'layui-col-xs5 layui-col-md5 layui-col-lg5'}">
+                    <div class="layui-card">
+                        <div class="layui-card-header"><span>&nbsp;&nbsp;<i class="layui-icon warn-card-hader-icon">&#xe618;</i>预警编辑</span></div>
+                        <div  class="layui-card-body warn-card-content-list">
+
+                            <!--<div class="layui-col-xs12 layui-col-md12 warn-content-skip">请选择业务类型</div>-->
+
+                            <!--<div class="layui-row layui-col-space5">-->
+                                <!--<div class="layui-col-xs1 layui-col-md1 warn-content-title"><div>新疆维吾尔自治区</div></div>-->
+                                <!--<div class="layui-col-xs11 layui-col-md11 warn-content-body">-->
+                                    <!--<textarea type="text" placeholder="请输入预警内容" autocomplete="off" class="layui-textarea"></textarea>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!---->
+                            <!--<div class="layui-row layui-col-space5">-->
+                                <!--<div class="layui-col-xs1 layui-col-md1 warn-content-title"><div>河南省</div></div>-->
+                                <!--<div class="layui-col-xs11 layui-col-md11 warn-content-body">-->
+                                    <!--<textarea type="text" placeholder="请输入预警内容" autocomplete="off" class="layui-textarea"></textarea>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 发布受众 -->
+                <div class="layui-col-xs4 layui-col-md4">
+                    <div class="layui-card warn-card-content">
+                        <div class="layui-card-header"><span>&nbsp;&nbsp;<i class="layui-icon layui-icon-tree warn-card-hader-icon"></i>发布受众(群组)</span></div>
+                        <!--<div  class="layui-card-body warn-card-content-list"><div class="warn-content-skip">请选择渠道</div></div>-->
+                        <div class="layui-tab layui-tab-card warn-tab" lay-filter="warn-tab">
+
+                            <div class="layui-icon layadmin-tabs-control layui-icon-prev warn-tab-prev"></div>
+                            <ul class="layui-tab-title warn-tab-title">
+                                <li class="layui-this" lay-id="choose-tab">温馨提示</li>
+                                <!--<li lay-id="1">短信</li>-->
+                                <!--<li lay-id="2">声讯</li>-->
+                                <!--<li lay-id="3">APP</li>-->
+                                <!--<li lay-id="4">大喇叭</li>-->
+                                <!--<li lay-id="5">显示屏</li>-->
+                                <!--<li lay-id="6">网站</li>-->
+                                <!--<li lay-id="7">微博</li>-->
+                                <!--<li lay-id="8">微信</li>-->
+                                <!--<li lay-id="9">北斗</li>-->
+                                <!--<li lay-id="10">电视</li>-->
+                                <!--<li lay-id="11">广播</li>-->
+                                <!--<li lay-id="12">传真</li>-->
+                            </ul>
+                            <div class="layui-tab-content warn-tab-content">
+                                <div class="layui-tab-item"><div class="warn-content-skip">暂无群组信息</div></div>
+                                <!--<div class="layui-tab-item">短信</div>-->
+                                <!--<div class="layui-tab-item">声讯</div>-->
+                                <!--<div class="layui-tab-item">APP</div>-->
+                                <!--<div class="layui-tab-item">大喇叭</div>-->
+                                <!--<div class="layui-tab-item">显示屏</div>-->
+                                <!--<div class="layui-tab-item">网站</div>-->
+                                <!--<div class="layui-tab-item">微博</div>-->
+                                <!--<div class="layui-tab-item">微信</div>-->
+                                <!--<div class="layui-tab-item">北斗</div>-->
+                                <!--<div class="layui-tab-item">电视</div>-->
+                                <!--<div class="layui-tab-item">广播</div>-->
+                                <!--<div class="layui-tab-item">传真</div>-->
+                            </div>
+                            <div class="layui-icon layadmin-tabs-control layui-icon-next warn-tab-next"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 附件上传 -->
+                <div class="layui-col-xs12 layui-col-md12 layui-col-lg12">
+                    <div class="layui-card">
+                        <div class="layui-card-header"><span>&nbsp;&nbsp;<i class="layui-icon layui-icon-upload-drag warn-card-hader-icon"></i>附件列表</span></div>
+                        <div class="layui-card-body warn-file-list-height warn-center">
+
+                            <!--文件上传初始化信息-->
+                            <div class="warn-upload-msg"><span>暂无上传文件</span></div>
+
+                            <!--存放文本框列表-->
+                            <div class="warn-file-list layui-hide"></div>
+                            <!--文件信息展示列表-->
+                            <table cellspacing="0" cellpadding="0" border="0"  class="layui-table layui-hide warn-file-table">
+                                <thead>
+                                <tr>
+                                    <th style="text-align: center">编号</th>
+                                    <th style="text-align: center">文件名称</th>
+                                    <th style="text-align: center">文件大小</th>
+                                    <th style="text-align: center">文件类型</th>
+                                    <th style="text-align: center">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--<tr>-->
+                                <!--<td>1</td>-->
+                                <!--<td>abc.jpg</td>-->
+                                <!--<td>128k</td>-->
+                                <!--<td>jpg</td>-->
+                                <!--<td><a class="layui-btn layui-btn-danger layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a></td>-->
+                                <!--</tr>-->
+                                <!--<tr>-->
+                                <!--<td>1</td>-->
+                                <!--<td>abc.jpg</td>-->
+                                <!--<td>128k</td>-->
+                                <!--<td>jpg</td>-->
+                                <!--<td><a class="layui-btn layui-btn-danger layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a></td>-->
+                                <!--</tr>-->
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/layuiadmin/layui/layui.js}" ></script>
+    <script th:src="@{/ewip/message/detail.js}" charset="utf-8"></script>
+    </body>
+</html>
