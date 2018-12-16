@@ -5,15 +5,15 @@
 
     <parent>
         <groupId>com.hyt</groupId>
-        <artifactId>ewip</artifactId>
+        <artifactId>app</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>com.hyt</groupId>
-    <artifactId>ewip-server</artifactId>
+    <artifactId>app-server</artifactId>
     <packaging>jar</packaging>
 
-    <name>ewip-server</name>
+    <name>app-server</name>
     <description>ewip-server project for Spring Boot</description>
 
     <dependencies>
